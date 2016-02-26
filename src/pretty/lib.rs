@@ -1,10 +1,7 @@
-#![feature(collections)]
-#![feature(old_io)]
-
 //! This crate defines a
 //! [Wadler-style](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf)
 //! pretty-printing API.
-
+#![feature(into_cow)]
 use doc::{
     best,
 };
@@ -16,10 +13,9 @@ use doc::Doc::{
     Nil,
     Text,
 };
-use std::old_io as io;
-use std::borrow::{
-    IntoCow,
-};
+
+use std::io;
+use std::borrow::{IntoCow};
 
 mod doc;
 
@@ -74,9 +70,9 @@ impl<'a> Doc<'a> {
     }
 
     #[inline]
-    pub fn render<W: io::Writer>(&self, width: usize, out: &mut W) -> io::IoResult<()> {
+    pub fn render<W: io::Write>(&self, width: usize, out: &mut W) -> io::Result<()> {
         let &Doc(ref doc) = self;
-        best(doc, width, out).and_then(|()| out.write_line(""))
+        best(doc, width, out).and_then(|()| writeln!(out, ""))
     }
 
     #[inline]

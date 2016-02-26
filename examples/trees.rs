@@ -1,11 +1,10 @@
-#![feature(old_io)]
 
 extern crate pretty;
 
 use pretty::{
     Doc
 };
-use std::old_io as io;
+use std::io;
 use std::str;
 
 #[derive(Clone, Debug)]
@@ -115,7 +114,7 @@ pub fn main() {
     // try writing to memory
     }.and_then(|()| {
         print!("\nwriting to string then printing:\n");
-        let mut mem = io::MemWriter::new();
+        let mut mem = io::Cursor::new(Vec::new());
         example
             .pretty()
             .render(70, &mut mem)

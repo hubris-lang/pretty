@@ -1,4 +1,5 @@
-use std::old_io as io;
+use std::borrow::Cow;
+use std::io::{self, Write};
 
 pub use self::Doc::{
     Nil,
@@ -17,7 +18,7 @@ fn spaces(n: usize) -> String {
 
 #[inline]
 fn nl_spaces(n: usize) -> String {
-    let mut s = String::from_str("\n");
+    let mut s = String::from("\n");
     s.push_str(&spaces(n));
     s
 }
@@ -35,7 +36,7 @@ pub enum Doc<'a> {
     Group(Box<Doc<'a>>),
     Nest(usize, Box<Doc<'a>>),
     Newline,
-    Text(::std::string::CowString<'a>),
+    Text(Cow<'a, str>),
 }
 
 type Cmd<'a> = (usize, Mode, &'a Doc<'a>);
@@ -94,11 +95,7 @@ fn fitting<'a>(
 }
 
 #[inline]
-pub fn best<W: io::Writer>(
-      doc: &Doc,
-    width: usize,
-      out: &mut W
-) -> io::IoResult<()> {
+pub fn best<W: Write>(doc: &Doc, width: usize, out: &mut W) -> io::Result<()> {
     let mut res   = Ok(());
     let mut pos   = 0usize;
     let mut bcmds = vec![(0usize, Mode::Break, doc)];
@@ -134,11 +131,11 @@ pub fn best<W: io::Writer>(
                     bcmds.push((ind + off, mode, doc));
                 },
                 &Newline => {
-                    res = out.write_str(&nl_spaces(ind));
+                    res = out.write(nl_spaces(ind).as_bytes()).map(|_| ());
                     pos = ind;
                 },
                 &Text(ref s) => {
-                    res  = out.write_str(&s);
+                    res  = out.write(s.as_bytes()).map(|_| ());
                     pos += s.len();
                 },
             }
