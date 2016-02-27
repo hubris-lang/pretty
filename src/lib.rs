@@ -16,6 +16,8 @@ use doc::Doc::{
 
 use std::io;
 use std::borrow::{IntoCow};
+use std::ops::{Add, Sub};
+use std::fmt::{self, Display, Formatter};
 
 mod doc;
 
@@ -80,3 +82,53 @@ impl<'a> Doc<'a> {
         Doc(Text(data.into_cow()))
     }
 }
+
+pub fn parens(doc: Doc) -> Doc {
+    Doc::text("(") + doc + Doc::text(")")
+}
+
+pub fn braces(doc: Doc) -> Doc {
+    Doc::text("{") + doc + Doc::text("}")
+}
+
+impl<'a> Add for Doc<'a> {
+    type Output = Doc<'a>;
+    fn add(self, other: Doc<'a>) -> Doc<'a> {
+        self.append(other)
+    }
+}
+
+// impl<'a, T: 'a + Pretty> Add<T> for Doc<'a> {
+//     type Output = Doc<'a>;
+//     fn add(self, other: T) -> Doc<'a> {
+//         self.append(other.pretty())
+//     }
+// }
+
+pub trait Pretty {
+    fn pretty(&self) -> Doc;
+}
+
+impl<'a> Pretty for Doc<'a> {
+    fn pretty(&self) -> Doc {
+        self.clone()
+    }
+}
+
+impl Pretty for String {
+    fn pretty(&self) -> Doc {
+        Doc::text(self.as_str())
+    }
+}
+
+impl Pretty for str {
+    fn pretty(&self) -> Doc {
+        Doc::text(self)
+    }
+}
+
+// impl<T: Pretty> Display for T {
+//     fn fmt(&self, formatter: &mut Formatter) -> Result<(), fmt::Error> {
+//         Doc::render(self.pretty(), 80, formatter)
+//     }
+// }
