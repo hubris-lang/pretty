@@ -3,7 +3,7 @@
 name = "pretty"
 version = "0.0.6"
 authors = [ "Jonathan Sterling <jon@jonmsterling.com>",
-            "Darin Morrison <darinmorrison+epsilonz@gmail.com>"
+            "Darin Morrison <darinmorrison+epsilonz@gmail.com>",
             "Jared Roesch <joresch@cs.washington.edu>" ]
 description = "Wadler-style pretty-printing combinators in Rust"
 documentation = "http://epsilonz.github.io/pretty.rs/doc/pretty/"
