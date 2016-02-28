@@ -91,6 +91,12 @@ pub fn braces(doc: Doc) -> Doc {
     Doc::text("{") + doc + Doc::text("}")
 }
 
+pub fn format<T: Pretty>(s: &T, formatter: &mut Formatter) -> Result<(), fmt::Error> {
+    let mut v = Vec::new();
+    Doc::render(&s.pretty(), 80, &mut v);
+    write!(formatter, "{}", try!(String::from_utf8(v).map_err(|_| fmt::Error)))
+}
+
 impl<'a> Add for Doc<'a> {
     type Output = Doc<'a>;
     fn add(self, other: Doc<'a>) -> Doc<'a> {
