@@ -93,7 +93,7 @@ pub fn braces(doc: Doc) -> Doc {
 
 pub fn format<T: Pretty>(s: &T, formatter: &mut Formatter) -> Result<(), fmt::Error> {
     let mut v = Vec::new();
-    Doc::render(&s.pretty(), 80, &mut v);
+    try!(Doc::render(&s.pretty(), 80, &mut v).map_err(|_| fmt::Error));
     write!(formatter, "{}", try!(String::from_utf8(v).map_err(|_| fmt::Error)))
 }
 
