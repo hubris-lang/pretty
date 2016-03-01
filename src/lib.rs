@@ -74,7 +74,7 @@ impl<'a> Doc<'a> {
     #[inline]
     pub fn render<W: io::Write>(&self, width: usize, out: &mut W) -> io::Result<()> {
         let &Doc(ref doc) = self;
-        best(doc, width, out).and_then(|()| writeln!(out, ""))
+        best(doc, width, out)
     }
 
     #[inline]
