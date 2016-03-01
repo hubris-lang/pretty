@@ -16,8 +16,11 @@ use doc::Doc::{
 
 use std::io;
 use std::borrow::{IntoCow};
-use std::ops::{Add, Sub};
-use std::fmt::{self, Display, Formatter};
+use std::ops::{Add};
+use std::fmt::{self, Formatter};
+
+#[macro_use] extern crate itertools;
+use itertools::Itertools;
 
 mod doc;
 
@@ -89,6 +92,10 @@ pub fn parens(doc: Doc) -> Doc {
 
 pub fn braces(doc: Doc) -> Doc {
     Doc::text("{") + doc + Doc::text("}")
+}
+
+pub fn seperate<'a>(docs: &[Doc<'a>], item: &Doc<'a>) -> Doc<'a> {
+    docs.iter().intersperse(item).fold(Doc::nil(), |a, b| a.append(b.clone()))
 }
 
 pub fn format<T: Pretty>(s: &T, formatter: &mut Formatter) -> Result<(), fmt::Error> {

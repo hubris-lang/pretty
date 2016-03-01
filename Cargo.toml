@@ -22,3 +22,6 @@ path = "src/lib.rs"
 doc  = false
 name = "trees"
 path = "examples/trees.rs"
+
+[dependencies]
+itertools = "*"
