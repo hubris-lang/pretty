@@ -1,7 +1,6 @@
 //! This crate defines a
 //! [Wadler-style](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf)
 //! pretty-printing API.
-#![feature(into_cow)]
 use doc::{
     best,
 };
@@ -14,8 +13,8 @@ use doc::Doc::{
     Text,
 };
 
+use std::borrow::Cow;
 use std::io;
-use std::borrow::{IntoCow};
 use std::ops::{Add};
 use std::fmt::{self, Formatter};
 
@@ -81,8 +80,8 @@ impl<'a> Doc<'a> {
     }
 
     #[inline]
-    pub fn text<T: IntoCow<'a, str>>(data: T) -> Doc<'a> {
-        Doc(Text(data.into_cow()))
+    pub fn text<T: Into<Cow<'a, str>>>(data: T) -> Doc<'a> {
+        Doc(Text(data.into()))
     }
 }
 
